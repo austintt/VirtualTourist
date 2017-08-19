@@ -13,7 +13,7 @@ import CoreData
 struct CoreDataStack {
     
     // MARK: Properties
-    
+    static let sharedInstance = CoreDataStack(modelName: "Model")!
     private let model: NSManagedObjectModel
     internal let coordinator: NSPersistentStoreCoordinator
     private let modelURL: URL
@@ -88,9 +88,13 @@ internal extension CoreDataStack  {
 
 extension CoreDataStack {
     
-    func saveContext() throws {
+    func saveContext() {
         if context.hasChanges {
-            try context.save()
+            do {
+                try context.save()
+            } catch {
+                print("Error while saving")
+            }
         }
     }
     

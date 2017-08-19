@@ -15,7 +15,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var map: MKMapView!
     
     private let pinIdentifier = "pinID"
-    let dataManager = CoreDataManager.sharedInstance
+    let dataManager = CoreDataStack.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +59,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         map.addAnnotation(annotation)
         
         // Add to db
-        let location = Location(lat: Double(newCoordinates.latitude), long: Double(newCoordinates.longitude), context: dataManager.context)
+        let location = Location(context: dataManager.context)
+        location.lat = Double(newCoordinates.latitude)
+        location.long = Double(newCoordinates.longitude)
+        dataManager.saveContext()
     }
     
     // Handle tap on existing pin
@@ -96,13 +99,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     
         // Add locations to map
-//        for location in locations.enumerated() {
-//            let annotation = MKPointAnnotation()
-//            annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(location.latitude),
-//                                                           longitude: CLLocationDegrees(location.longitude))
-//            annotations.append(annotation)
-//        }
-//        mapView.addAnnotations(annotations)
+        for (_,location) in locations.enumerated() {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(location.lat),
+                                                           longitude: CLLocationDegrees(location.long))
+            annotations.append(annotation)
+        }
+        map.addAnnotations(annotations)
     }
 }
 
