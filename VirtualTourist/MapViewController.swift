@@ -54,7 +54,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     {
         // get location
         if let annotation = view.annotation {
-            let location = Location(lat: Double(annotation.coordinate.longitude), long: Double(annotation.coordinate.longitude))
+            let location = Location(lat: Double(annotation.coordinate.latitude), long: Double(annotation.coordinate.longitude))
             
             // push the album view
             if let controller = self.storyboard!.instantiateViewController(withIdentifier: "albumVC") as? AlbumViewController {
