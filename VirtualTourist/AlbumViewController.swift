@@ -39,7 +39,7 @@ class AlbumViewController: UIViewController {
             // flickr
             flickr.searchByLocation(location: location) { (result, error) in
                 if let error = error {
-                    self.infoLabel.text = error.localizedDescription
+                    self.displayMessage(error: error)
                 } else {
                     print("yay")
                 }
@@ -55,6 +55,13 @@ class AlbumViewController: UIViewController {
         infoLabel.layer.masksToBounds = true
         infoLabel.text = ""
         infoLabel.isHidden = true
+    }
+    
+    func displayMessage(error: Error) {
+        performUIUpdatesOnMain {
+            self.infoLabel.isHidden = false
+            self.infoLabel.text = error.localizedDescription
+        }
     }
     
     // MARK: Map
