@@ -49,25 +49,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         map.addAnnotation(annotation)
     }
     
-    // Setup annotation,
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        if annotation is MKUserLocation { return nil }
-//        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: pinIdentifier) as? MKPinAnnotationView
-//        if annotationView == nil {
-//            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: pinIdentifier)
-//            // Disable callout
-//            annotationView?.canShowCallout = false
-//        } else {
-//            annotationView?.annotation = annotation
-//        }
-//        
-//        return annotationView
-//    }
-    
     // Handle tap on existing pin
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
     {
-        print("yo")
+        // get location
+        if let annotation = view.annotation {
+            let location = Location(lat: Double(annotation.coordinate.longitude), long: Double(annotation.coordinate.longitude))
+            
+            // push the album view
+            if let controller = self.storyboard!.instantiateViewController(withIdentifier: "albumVC") as? AlbumViewController {
+                controller.location = location
+                navigationController!.pushViewController(controller, animated: true)
+            }
+        }
     }
 }
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D99A48C11F48AED1004334DD /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99A48C01F48AED1004334DD /* AlbumViewController.swift */; };
+		D99A48C31F48B454004334DD /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99A48C21F48B454004334DD /* Location.swift */; };
 		D9D14DD51F366E15006FE31C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D14DD41F366E15006FE31C /* AppDelegate.swift */; };
 		D9D14DD71F366E15006FE31C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D14DD61F366E15006FE31C /* MapViewController.swift */; };
 		D9D14DDA1F366E15006FE31C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9D14DD81F366E15006FE31C /* Main.storyboard */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D99A48C01F48AED1004334DD /* AlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
+		D99A48C21F48B454004334DD /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		D9D14DD11F366E15006FE31C /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9D14DD41F366E15006FE31C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D9D14DD61F366E15006FE31C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +70,7 @@
 		D9D14DE61F366E5C006FE31C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D99A48C21F48B454004334DD /* Location.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -74,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				D9D14DD61F366E15006FE31C /* MapViewController.swift */,
+				D99A48C01F48AED1004334DD /* AlbumViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -169,7 +175,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D99A48C11F48AED1004334DD /* AlbumViewController.swift in Sources */,
 				D9D14DD71F366E15006FE31C /* MapViewController.swift in Sources */,
+				D99A48C31F48B454004334DD /* Location.swift in Sources */,
 				D9D14DD51F366E15006FE31C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,6 +344,7 @@
 				D9D14DE51F366E15006FE31C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
