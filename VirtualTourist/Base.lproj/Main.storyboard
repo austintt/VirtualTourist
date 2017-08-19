@@ -60,16 +60,6 @@
                                     <constraint firstAttribute="height" constant="194" id="yzG-k3-FDA"/>
                                 </constraints>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFY-9I-x4D">
-                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
-                                <color key="backgroundColor" red="0.015686274509803921" green="0.40784313725490196" blue="0.396078431372549" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="gIa-FJ-dKY"/>
-                                </constraints>
-                                <state key="normal" title="New Collection">
-                                    <color key="titleColor" red="0.9882352941176471" green="1" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                            </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LBf-Jz-Hp5">
                                 <rect key="frame" x="0.0" y="213" width="375" height="404"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -90,7 +80,26 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFY-9I-x4D">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <color key="backgroundColor" red="0.015686274509803921" green="0.40784313725490196" blue="0.396078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="gIa-FJ-dKY"/>
+                                </constraints>
+                                <state key="normal" title="New Collection">
+                                    <color key="titleColor" red="0.9882352941176471" green="1" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nJw-Pw-Cdg">
+                                <rect key="frame" x="65" y="156" width="244" height="114"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.12941176470588234" green="0.62745098039215685" blue="0.62745098039215685" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="0.9882352941176471" green="1" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
+                        <color key="backgroundColor" red="0.98823529409999999" green="1" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="LBf-Jz-Hp5" firstAttribute="centerX" secondItem="7ed-PH-IQf" secondAttribute="centerX" id="3BG-OQ-V2j"/>
                             <constraint firstAttribute="trailing" secondItem="jFY-9I-x4D" secondAttribute="trailing" id="BBq-Fm-36U"/>
@@ -108,6 +117,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="f3o-ta-7rk"/>
                     <connections>
+                        <outlet property="infoLabel" destination="nJw-Pw-Cdg" id="tgS-Mu-AtP"/>
                         <outlet property="mapView" destination="5yC-S3-rVJ" id="i3e-hO-i8z"/>
                     </connections>
                 </viewController>
