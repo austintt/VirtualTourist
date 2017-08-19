@@ -53,7 +53,58 @@
                     <view key="view" contentMode="scaleToFill" id="7ed-PH-IQf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="0.61974072690000004" blue="0.88151631180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="5yC-S3-rVJ">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="194"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="194" id="yzG-k3-FDA"/>
+                                </constraints>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFY-9I-x4D">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <color key="backgroundColor" red="0.015686274509803921" green="0.40784313725490196" blue="0.396078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="gIa-FJ-dKY"/>
+                                </constraints>
+                                <state key="normal" title="New Collection">
+                                    <color key="titleColor" red="0.9882352941176471" green="1" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LBf-Jz-Hp5">
+                                <rect key="frame" x="0.0" y="193" width="375" height="424"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3GI-4L-a3T">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="KTf-mU-BSI">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="LBf-Jz-Hp5" firstAttribute="centerX" secondItem="7ed-PH-IQf" secondAttribute="centerX" id="3BG-OQ-V2j"/>
+                            <constraint firstAttribute="trailing" secondItem="jFY-9I-x4D" secondAttribute="trailing" id="BBq-Fm-36U"/>
+                            <constraint firstItem="LBf-Jz-Hp5" firstAttribute="leading" secondItem="7ed-PH-IQf" secondAttribute="leading" id="E25-eL-NW3"/>
+                            <constraint firstAttribute="trailing" secondItem="LBf-Jz-Hp5" secondAttribute="trailing" id="FY9-Mv-Hk0"/>
+                            <constraint firstItem="jFY-9I-x4D" firstAttribute="top" secondItem="LBf-Jz-Hp5" secondAttribute="bottom" id="KM1-fi-ioG"/>
+                            <constraint firstItem="5yC-S3-rVJ" firstAttribute="centerX" secondItem="7ed-PH-IQf" secondAttribute="centerX" id="Rou-cp-Cib"/>
+                            <constraint firstItem="LBf-Jz-Hp5" firstAttribute="top" secondItem="5yC-S3-rVJ" secondAttribute="bottom" constant="-1" id="XmI-q0-M2G"/>
+                            <constraint firstItem="5yC-S3-rVJ" firstAttribute="leading" secondItem="7ed-PH-IQf" secondAttribute="leading" id="cOh-uS-MqA"/>
+                            <constraint firstItem="jFY-9I-x4D" firstAttribute="leading" secondItem="7ed-PH-IQf" secondAttribute="leading" id="ddf-Ng-YSv"/>
+                            <constraint firstItem="5yC-S3-rVJ" firstAttribute="top" secondItem="7ed-PH-IQf" secondAttribute="top" id="fpf-fT-rZt"/>
+                            <constraint firstItem="OAu-bp-ibM" firstAttribute="top" secondItem="jFY-9I-x4D" secondAttribute="bottom" id="qGb-bz-5rN"/>
+                            <constraint firstAttribute="trailing" secondItem="5yC-S3-rVJ" secondAttribute="trailing" id="xMJ-6c-cqf"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="f3o-ta-7rk"/>
                 </viewController>
