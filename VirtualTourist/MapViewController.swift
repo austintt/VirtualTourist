@@ -70,11 +70,26 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     {
         // get location
         if let annotation = view.annotation {
-            //let location = Location(lat: Double(annotation.coordinate.latitude), long: Double(annotation.coordinate.longitude))
+            var location: Location!
+            let lat = Double(annotation.coordinate.latitude)
+            let long = Double(annotation.coordinate.longitude)
+            
+            // get location
+            do {
+                let fr = NSFetchRequest<Location>(entityName: "Location")
+                let predicate = NSPredicate(format: "lat == %@ AND long == %@", argumentArray: [lat, long])
+                fr.predicate = predicate
+                let locations = try dataManager.context.fetch(fr)
+                if let foundLocation = locations.first {
+                    location = foundLocation
+                }
+            } catch let error as NSError {
+                print("Failed to get location: \(error.localizedDescription)")
+            }
             
             // push the album view
             if let controller = self.storyboard!.instantiateViewController(withIdentifier: "albumVC") as? AlbumViewController {
-                //controller.location = location
+                controller.location = location
                 navigationController!.pushViewController(controller, animated: true)
             }
         }
