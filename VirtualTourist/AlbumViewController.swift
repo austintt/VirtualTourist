@@ -19,7 +19,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
     let radius = 200
     var photos = [Photo]()
     let flickr = FlickrManager()
-    let dataManager = CoreDataStack.sharedInstance
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     
     override func viewDidLoad() {
@@ -37,15 +36,16 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
         if let location = location {
             print("Location \(location)")
             
-            // Configure map
-            setUpMap(location: location)
-            
             // Search or fetch photos
-            if let photos = getPhotosFromDB() {
+            if let dbResult = getPhotosFromDB() {
+                photos = dbResult
                 print("Photos from db: \(photos.count)")
             } else {
                 searchPhotos()
             }
+            
+            // Configure map
+            setUpMap(location: location)
                 
         }
     }
@@ -96,16 +96,16 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
                         
                         // for each photo we found, make a new Photo object
                         for url in urls {
-                            let photo = Photo(context: self.dataManager.context)
+                            let photo = Photo(context: CoreDataStack.shared.context)
                             photo.url = url
                             photo.location = self.location
                             
                             self.photos.append(photo)
                         }
                         
-                        self.dataManager.save()
+                        CoreDataStack.shared.save()
                         print("Found photos: \(urls.count)")
-                        
+                        print("photos: \(self.photos.count)")
 //                        DispatchQueue.main.async {
 //                            self.collectionView.reloadData()
 //                        }
@@ -124,7 +124,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
         fr.predicate = predicate
         
         do {
-            if let result = try dataManager.context.fetch(fr) as? [Photo] {
+            if let result = try CoreDataStack.shared.context.fetch(fr) as? [Photo] {
                 return result.count > 0 ? result : nil
             }
         } catch {

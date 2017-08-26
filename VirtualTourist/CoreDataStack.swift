@@ -13,7 +13,7 @@ import CoreData
 struct CoreDataStack {
     
     // MARK: Properties
-    static let sharedInstance = CoreDataStack(modelName: "Model")!
+    static let shared = CoreDataStack(modelName: "Model")!
     private let model: NSManagedObjectModel
     internal let coordinator: NSPersistentStoreCoordinator
     private let modelURL: URL

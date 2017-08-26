@@ -15,7 +15,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var map: MKMapView!
     
     private let pinIdentifier = "pinID"
-    let dataManager = CoreDataStack.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,10 +58,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         map.addAnnotation(annotation)
         
         // Add to db
-        let location = Location(context: dataManager.context)
+        let location = Location(context: CoreDataStack.shared.context)
         location.lat = Double(newCoordinates.latitude)
         location.long = Double(newCoordinates.longitude)
-        dataManager.save()
+        CoreDataStack.shared.save()
     }
     
     // Handle tap on existing pin
@@ -79,7 +78,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 let fr = NSFetchRequest<Location>(entityName: "Location")
                 let predicate = NSPredicate(format: "lat == %@ AND long == %@", argumentArray: [lat, long])
                 fr.predicate = predicate
-                let locations = try dataManager.context.fetch(fr)
+                let locations = try CoreDataStack.shared.context.fetch(fr)
                 if let foundLocation = locations.first {
                     location = foundLocation
                 }
@@ -104,7 +103,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         // Get the locations
         do {
-            let results = try dataManager.context.fetch(fr)
+            let results = try CoreDataStack.shared.context.fetch(fr)
             if let results = results as? [Location] {
                 locations = results
                 print("Locations: \(locations.count)")
