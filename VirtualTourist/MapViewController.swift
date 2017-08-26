@@ -62,7 +62,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let location = Location(context: dataManager.context)
         location.lat = Double(newCoordinates.latitude)
         location.long = Double(newCoordinates.longitude)
-        dataManager.saveContext()
+        dataManager.save()
     }
     
     // Handle tap on existing pin

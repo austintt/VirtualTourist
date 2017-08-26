@@ -14,7 +14,7 @@ class FlickrManager: NSObject {
     var session = URLSession.shared
 
     // MARK: API
-    func searchByLocation(location: Location, completionHandlerForSearchByLocation: @escaping (_ result: [String:AnyObject]?, _ error: NSError?) -> Void) {
+    func searchByLocation(location: Location, completionHandlerForSearchByLocation: @escaping (_ result: [String]?, _ error: NSError?) -> Void) {
         
         let methodParameters = [
             Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
@@ -50,7 +50,7 @@ class FlickrManager: NSObject {
         }
     }
     
-    private func getPhotos(_ methodParameters: [String: AnyObject], completionHandlerForGetPhotos: @escaping (_ result: [String:AnyObject]?, _ error: NSError?) -> Void) {
+    private func getPhotos(_ methodParameters: [String: AnyObject], completionHandlerForGetPhotos: @escaping (_ result: [String]?, _ error: NSError?) -> Void) {
         // create session and request
         let request = URLRequest(url: flickrURLFromParameters(methodParameters))
         
@@ -103,18 +103,21 @@ class FlickrManager: NSObject {
                 return
             }
             
-            /* GUARD: Is "pages" key in the photosDictionary? */
-            guard let totalPages = photosDictionary[Constants.FlickrResponseKeys.Pages] as? Int else {
-                sendError("Cannot find key '\(Constants.FlickrResponseKeys.Pages)' in \(photosDictionary)")
+            /* GUARD: Is "photos" key in our result? */
+            guard let photosArray = photosDictionary[Constants.FlickrResponseKeys.Photo] as? [[String:AnyObject]] else {
+                sendError("Cannot find keys '\(Constants.FlickrResponseKeys.Photo)' in \(parsedResult)")
                 return
             }
             
-            // pick a random page!
-            let pageLimit = min(totalPages, 40)
-            let randomPage = Int(arc4random_uniform(UInt32(pageLimit))) + 1
-            print(photosDictionary)
-            completionHandlerForGetPhotos(photosDictionary, nil)
-//            self.displayImageFromFlickrBySearch(methodParameters, withPageNumber: randomPage)
+            // Get URLs of photos
+            var photoURLS = [String]()
+            for photo in photosArray {
+                if let photoURL = photo[Constants.FlickrResponseKeys.MediumURL] as? String {
+                    photoURLS.append(photoURL)
+                }
+            }
+        
+            completionHandlerForGetPhotos(photoURLS, nil)
         }
         
         // start the task!

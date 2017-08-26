@@ -19,6 +19,8 @@ struct CoreDataStack {
     private let modelURL: URL
     internal let dbURL: URL
     let context: NSManagedObjectContext
+    internal let persistingContext: NSManagedObjectContext
+    internal let backgroundContext: NSManagedObjectContext
     
     // MARK: Initializers
     
@@ -38,12 +40,20 @@ struct CoreDataStack {
         }
         self.model = model
         
-        // Create the store coordinator
+        /// Create the store coordinator
         coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         
+        // Create a persistingContext (private queue) and a child one (main queue)
         // create a context and add connect it to the coordinator
+        persistingContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        persistingContext.persistentStoreCoordinator = coordinator
+        
         context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.persistentStoreCoordinator = coordinator
+        context.parent = persistingContext
+        
+        // Create a background context child of main context
+        backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.parent = context
         
         // Add a SQLite store located in the documents folder
         let fm = FileManager.default
@@ -98,21 +108,24 @@ extension CoreDataStack {
         }
     }
     
-    func autoSave(_ delayInSeconds : Int) {
-        
-        if delayInSeconds > 0 {
-            do {
-                try saveContext()
-                print("Autosaving")
-            } catch {
-                print("Error while autosaving")
-            }
+    func save() {
+        context.performAndWait() {
             
-            let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC
-            let time = DispatchTime.now() + Double(Int64(delayInNanoSeconds)) / Double(NSEC_PER_SEC)
-            
-            DispatchQueue.main.asyncAfter(deadline: time) {
-                self.autoSave(delayInSeconds)
+            if self.context.hasChanges {
+                do {
+                    try self.context.save()
+                } catch {
+                    fatalError("Error while saving main context: \(error)")
+                }
+                
+                // now we save in the background
+                self.persistingContext.perform() {
+                    do {
+                        try self.persistingContext.save()
+                    } catch {
+                        fatalError("Error while saving persisting context: \(error)")
+                    }
+                }
             }
         }
     }
