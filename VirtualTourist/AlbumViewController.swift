@@ -23,14 +23,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureInfoLabel()
-        
-       
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
         
         // Make sure we have a location
         if let location = location {
@@ -44,10 +36,16 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
                 searchPhotos()
             }
             
+            configureInfoLabel()
+            
             // Configure map
             setUpMap(location: location)
-                
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
     }
     
     func configureInfoLabel() {
@@ -106,9 +104,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
                         CoreDataStack.shared.save()
                         print("Found photos: \(urls.count)")
                         print("photos: \(self.photos.count)")
-//                        DispatchQueue.main.async {
-//                            self.collectionView.reloadData()
-//                        }
                     }
                 }
             }
@@ -125,6 +120,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
         
         do {
             if let result = try CoreDataStack.shared.context.fetch(fr) as? [Photo] {
+                print(result)
                 return result.count > 0 ? result : nil
             }
         } catch {
