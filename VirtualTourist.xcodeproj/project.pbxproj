@@ -14,6 +14,7 @@
 		D99A48CE1F48C4EF004334DD /* FlickrManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99A48CD1F48C4EF004334DD /* FlickrManager.swift */; };
 		D99A48D31F48EBAD004334DD /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D99A48D11F48EBAD004334DD /* Model.xcdatamodeld */; };
 		D99A48D51F48EF42004334DD /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99A48D41F48EF42004334DD /* CoreDataStack.swift */; };
+		D9B78A841F53478D00C5FDE2 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B78A831F53478D00C5FDE2 /* PhotoCell.swift */; };
 		D9D14DD51F366E15006FE31C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D14DD41F366E15006FE31C /* AppDelegate.swift */; };
 		D9D14DD71F366E15006FE31C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D14DD61F366E15006FE31C /* MapViewController.swift */; };
 		D9D14DDA1F366E15006FE31C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9D14DD81F366E15006FE31C /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 		D99A48CD1F48C4EF004334DD /* FlickrManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrManager.swift; sourceTree = "<group>"; };
 		D99A48D21F48EBAD004334DD /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		D99A48D41F48EF42004334DD /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		D9B78A831F53478D00C5FDE2 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		D9D14DD11F366E15006FE31C /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9D14DD41F366E15006FE31C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D9D14DD61F366E15006FE31C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				D99A48D41F48EF42004334DD /* CoreDataStack.swift */,
+				D9B78A831F53478D00C5FDE2 /* PhotoCell.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				D99A48C61F48BA86004334DD /* MapViewExtension.swift in Sources */,
 				D99A48D51F48EF42004334DD /* CoreDataStack.swift in Sources */,
 				D99A48D31F48EBAD004334DD /* Model.xcdatamodeld in Sources */,
+				D9B78A841F53478D00C5FDE2 /* PhotoCell.swift in Sources */,
 				D99A48CB1F48C362004334DD /* Constants.swift in Sources */,
 				D99A48C81F48BED6004334DD /* GCDBlackBox.swift in Sources */,
 				D9D14DD51F366E15006FE31C /* AppDelegate.swift in Sources */,

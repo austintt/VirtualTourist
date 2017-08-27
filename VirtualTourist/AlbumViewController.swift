@@ -10,10 +10,11 @@ import UIKit
 import MapKit
 import CoreData
 
-class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate {
+class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     var location: Location?
     let radius = 200
@@ -23,6 +24,11 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        configureInfoLabel()
         
         // Make sure we have a location
         if let location = location {
@@ -35,8 +41,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
             } else {
                 searchPhotos()
             }
-            
-            configureInfoLabel()
             
             // Configure map
             setUpMap(location: location)
@@ -78,9 +82,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
             self.mapView.addAnnotation(annotation)
     }
     
-    // MARK: Collection View
-    
-    // MARK: Network
+    // MARK: Network & DB
     
     func searchPhotos() {
         if let location = self.location {
@@ -100,6 +102,9 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
                             
                             self.photos.append(photo)
                         }
+                        performUIUpdatesOnMain {
+                            self.collectionView.reloadData()
+                        }
                         
                         CoreDataStack.shared.save()
                         print("Found photos: \(urls.count)")
@@ -109,8 +114,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
             }
         }
     }
-    
-    // MARK: DB
     
     func getPhotosFromDB() -> [Photo]? {
         // Get all photos related to this location
@@ -129,5 +132,71 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate 
         
         return nil
     }
+    
+    // MARK: Collection View
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+        return photos.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
+        //Get the Collection Cell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
+        
+        //Get the Photo Image saved in the DB.
+        let pic = self.photos[indexPath.row] as! Photo
+        
+        // If there is not pic in Core data, issue the download.
+        if pic.image == nil
+        {
+            cell.activityIndicator.startAnimating()
+            
+            //Download photos from Flickr API.
+            flickr.downloadPhotos(photoURL: pic.url!){ (image, error)  in
+                
+                //Check if the image data is not nil
+                guard let imageData = image,
+                    let downloadedImage = UIImage(data: imageData as Data) else
+                {
+                    return
+                }
+                
+                DispatchQueue.main.async
+                    {
+                        pic.image = imageData
+                        CoreDataStack.shared.save()
+                        
+                        if let updateCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell
+                        {
+                            updateCell.imageView.image = downloadedImage
+                            updateCell.activityIndicator.stopAnimating()
+                        }
+                }
+                cell.imageView.image = UIImage(data: imageData as Data)
+//                self.configureCellSection(cell: cell, indexPath: indexPath as NSIndexPath)
+            }
+        }
+        else
+        {
+            // Display the image loaded from Core data.
+            cell.imageView.image = UIImage(data: pic.image as! Data)
+        }
+        return cell
+    }
+    
+    //Configure the Collection Cell
+//    func configureCellSection(cell: PhotoCell, indexPath: NSIndexPath)
+//    {
+//        if let _ = selectedPhotos.index(of: indexPath)
+//        {
+//            cell.alpha = 0.5
+//        }
+//        else
+//        {
+//            cell.alpha = 1.0
+//        }
+//    }
     
 }
