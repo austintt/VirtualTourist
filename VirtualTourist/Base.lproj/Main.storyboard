@@ -95,34 +95,34 @@
                                 <rect key="frame" x="0.0" y="213" width="375" height="404"/>
                                 <color key="backgroundColor" red="0.98823529409999999" green="1" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ohX-cF-oqr">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="77" height="77"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="0v8-q6-VRj" customClass="PhotoCell" customModule="VirtualTourist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oIo-lb-UhV">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                </imageView>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="SCk-Yd-kLn">
-                                                    <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                                    <rect key="frame" x="29" y="29" width="20" height="20"/>
                                                 </activityIndicatorView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oIo-lb-UhV">
+                                                    <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="SCk-Yd-kLn" firstAttribute="centerX" secondItem="0v8-q6-VRj" secondAttribute="centerX" id="Eid-gt-nC4"/>
-                                            <constraint firstItem="oIo-lb-UhV" firstAttribute="leading" secondItem="0v8-q6-VRj" secondAttribute="leading" id="FTY-yc-Mib"/>
-                                            <constraint firstItem="oIo-lb-UhV" firstAttribute="top" secondItem="0v8-q6-VRj" secondAttribute="top" id="Q3T-dO-l0C"/>
-                                            <constraint firstAttribute="bottom" secondItem="oIo-lb-UhV" secondAttribute="bottom" id="dXE-7Q-DFt"/>
+                                            <constraint firstItem="oIo-lb-UhV" firstAttribute="top" secondItem="0v8-q6-VRj" secondAttribute="top" id="FbP-YR-Mh6"/>
+                                            <constraint firstItem="oIo-lb-UhV" firstAttribute="leading" secondItem="0v8-q6-VRj" secondAttribute="leading" id="UUz-tL-0Do"/>
                                             <constraint firstItem="SCk-Yd-kLn" firstAttribute="centerY" secondItem="0v8-q6-VRj" secondAttribute="centerY" id="ms2-y4-vyc"/>
-                                            <constraint firstAttribute="trailing" secondItem="oIo-lb-UhV" secondAttribute="trailing" id="r1Y-7c-oly"/>
+                                            <constraint firstItem="oIo-lb-UhV" firstAttribute="centerY" secondItem="SCk-Yd-kLn" secondAttribute="centerY" id="n29-H3-TZK"/>
+                                            <constraint firstItem="oIo-lb-UhV" firstAttribute="centerX" secondItem="SCk-Yd-kLn" secondAttribute="centerX" id="uiG-KY-CoA"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="activityIndicator" destination="SCk-Yd-kLn" id="YrY-Mw-f9E"/>
@@ -169,6 +169,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="f3o-ta-7rk"/>
                     <connections>
+                        <outlet property="actionButton" destination="jFY-9I-x4D" id="xYw-Cf-xAi"/>
                         <outlet property="collectionView" destination="bHT-aP-WWM" id="lJr-TJ-24w"/>
                         <outlet property="infoLabel" destination="nJw-Pw-Cdg" id="tgS-Mu-AtP"/>
                         <outlet property="mapView" destination="5yC-S3-rVJ" id="i3e-hO-i8z"/>

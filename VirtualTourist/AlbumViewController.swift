@@ -15,12 +15,22 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var actionButton: UIButton!
     
     var location: Location?
     let radius = 200
     var photos = [Photo]()
     let flickr = FlickrManager()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
+    
+    // Set button title
+    var selectedPhotos = [NSIndexPath]()
+    {
+        didSet
+        {
+            actionButton.titleLabel?.text = selectedPhotos.isEmpty ? "New Collection" : "Delete Photos"
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,8 +150,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         return photos.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //Get the Collection Cell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
         
@@ -149,8 +158,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         let pic = self.photos[indexPath.row] as! Photo
         
         // If there is not pic in Core data, issue the download.
-        if pic.image == nil
-        {
+        if pic.image == nil {
             cell.activityIndicator.startAnimating()
             
             //Download photos from Flickr API.
@@ -158,45 +166,46 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
                 
                 //Check if the image data is not nil
                 guard let imageData = image,
-                    let downloadedImage = UIImage(data: imageData as Data) else
-                {
+                    let downloadedImage = UIImage(data: imageData as Data) else {
                     return
                 }
                 
-                DispatchQueue.main.async
-                    {
+                performUIUpdatesOnMain {
                         pic.image = imageData
                         CoreDataStack.shared.save()
                         
-                        if let updateCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell
-                        {
+                        if let updateCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell {
                             updateCell.imageView.image = downloadedImage
                             updateCell.activityIndicator.stopAnimating()
                         }
                 }
                 cell.imageView.image = UIImage(data: imageData as Data)
-//                self.configureCellSection(cell: cell, indexPath: indexPath as NSIndexPath)
+                self.configureCellSection(cell: cell, indexPath: indexPath as NSIndexPath)
             }
-        }
-        else
-        {
+        } else {
             // Display the image loaded from Core data.
             cell.imageView.image = UIImage(data: pic.image as! Data)
         }
         return cell
     }
     
-    //Configure the Collection Cell
-//    func configureCellSection(cell: PhotoCell, indexPath: NSIndexPath)
-//    {
-//        if let _ = selectedPhotos.index(of: indexPath)
-//        {
-//            cell.alpha = 0.5
-//        }
-//        else
-//        {
-//            cell.alpha = 1.0
-//        }
-//    }
+    // When image is tapped
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath as IndexPath) as! PhotoCell
+        
+        if let index = selectedPhotos.index(of: indexPath as NSIndexPath) {
+            selectedPhotos.remove(at: index)
+        } else {
+            selectedPhotos.append(indexPath as NSIndexPath)
+        }
+        configureCellSection(cell: cell, indexPath: indexPath as NSIndexPath)
+    }
     
+    func configureCellSection(cell: PhotoCell, indexPath: NSIndexPath) {
+        if let _ = selectedPhotos.index(of: indexPath) {
+            cell.alpha = 0.5
+        } else {
+            cell.alpha = 1.0
+        }
+    }
 }
