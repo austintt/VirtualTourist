@@ -36,6 +36,7 @@ struct Constants {
         static let Text = "text"
         static let BoundingBox = "bbox"
         static let Page = "page"
+        static let PerPage = "per_page"
     }
     
     // MARK: Flickr Parameter Values
@@ -48,6 +49,7 @@ struct Constants {
         static let GalleryID = "5704-72157622566655097"
         static let MediumURL = "url_m"
         static let UseSafeSearch = "2"
+        static let PhotosPerPage = "30"
     }
     
     // MARK: Flickr Response Keys

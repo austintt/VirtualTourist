@@ -23,6 +23,8 @@ class FlickrManager: NSObject {
             Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
             Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+            Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PhotosPerPage,
+            Constants.FlickrParameterKeys.Page: "\(arc4random_uniform(10) + 1)",
             Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
         ]
         
