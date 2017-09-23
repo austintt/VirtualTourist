@@ -24,8 +24,9 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     
     // Set button title
-    var selectedPhotos = [NSIndexPath]()
+    var selectedPhotos = [Photo]()
     {
+        // Change button title based on whether or not photos are selected
         didSet
         {
             actionButton.titleLabel?.text = selectedPhotos.isEmpty ? "New Collection" : "Delete Photos"
@@ -50,6 +51,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
                 print("Photos from db: \(photos.count)")
             } else {
                 searchPhotos()
+                print("Photos from search: \(self.photos.count)")
             }
             
             // Configure map
@@ -81,7 +83,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     // MARK: Map
     func setUpMap(location: Location) {
         
-        let regionRadius: CLLocationDistance = 2000
+        let regionRadius: CLLocationDistance = 4000
         
             // Center map on location
             self.mapView.centerMapOnLocation(location: location, radius: regionRadius)
@@ -133,7 +135,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         
         do {
             if let result = try CoreDataStack.shared.context.fetch(fr) as? [Photo] {
-                print(result)
                 return result.count > 0 ? result : nil
             }
         } catch {
@@ -141,6 +142,33 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         }
         
         return nil
+    }
+    
+    private func deleteAllLocationPhotos() {
+        // Delete from db
+        for photo in photos {
+            CoreDataStack.shared.context.delete(photo)
+        }
+        // Reset arrays, save
+        photos.removeAll()
+        selectedPhotos = [Photo]()
+        collectionView.reloadData()
+        CoreDataStack.shared.save()
+    }
+    
+    private func deleteSelectedPhotos() {
+        for photo in selectedPhotos {
+            // Remove from photos array
+            photos.remove(at: photos.index(of: photo)!)
+            
+            // Delete from db
+            CoreDataStack.shared.context.delete(photo)
+        }
+        
+        // Save and empty selectedPhotos, refresh view
+        CoreDataStack.shared.save()
+        selectedPhotos = [Photo]()
+        collectionView.reloadData()
     }
     
     // MARK: Collection View
@@ -155,14 +183,14 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
         
         //Get the Photo Image saved in the DB.
-        let pic = self.photos[indexPath.row] as! Photo
+        let photo = self.photos[indexPath.row] as! Photo
         
-        // If there is not pic in Core data, issue the download.
-        if pic.image == nil {
+        // If no image in db, download.
+        if photo.image == nil {
             cell.activityIndicator.startAnimating()
             
-            //Download photos from Flickr API.
-            flickr.downloadPhotos(photoURL: pic.url!){ (image, error)  in
+            // Download photos from Flickr API.
+            flickr.downloadPhotos(photoURL: photo.url!){ (image, error)  in
                 
                 //Check if the image data is not nil
                 guard let imageData = image,
@@ -170,42 +198,52 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
                     return
                 }
                 
+                // Save data
+                photo.image = imageData
+                CoreDataStack.shared.save()
+                
+                // Display images
                 performUIUpdatesOnMain {
-                        pic.image = imageData
-                        CoreDataStack.shared.save()
-                        
-                        if let updateCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell {
-                            updateCell.imageView.image = downloadedImage
-                            updateCell.activityIndicator.stopAnimating()
-                        }
+                    if let updateCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell {
+                        updateCell.imageView.image = downloadedImage
+                        updateCell.activityIndicator.stopAnimating()
+                    }
                 }
                 cell.imageView.image = UIImage(data: imageData as Data)
-                self.configureCellSection(cell: cell, indexPath: indexPath as NSIndexPath)
             }
         } else {
             // Display the image loaded from Core data.
-            cell.imageView.image = UIImage(data: pic.image as! Data)
+            cell.imageView.image = UIImage(data: photo.image as! Data)
         }
         return cell
     }
     
-    // When image is tapped
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath as IndexPath) as! PhotoCell
-        
-        if let index = selectedPhotos.index(of: indexPath as NSIndexPath) {
-            selectedPhotos.remove(at: index)
+    @IBAction func actionButtonPressed(_ sender: Any) {
+        // Check if we have any selected photos
+        if selectedPhotos.isEmpty {
+            // Clear all photos and request new
+            deleteAllLocationPhotos()
+            searchPhotos()
+            
         } else {
-            selectedPhotos.append(indexPath as NSIndexPath)
+            // Delete selected photos
+            deleteSelectedPhotos()
         }
-        configureCellSection(cell: cell, indexPath: indexPath as NSIndexPath)
     }
     
-    func configureCellSection(cell: PhotoCell, indexPath: NSIndexPath) {
-        if let _ = selectedPhotos.index(of: indexPath) {
-            cell.alpha = 0.5
-        } else {
+    // Handle tap on image
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath as IndexPath) as! PhotoCell
+        let photo = photos[indexPath.row]
+        
+        // Unmark selected image
+        if selectedPhotos.contains(photo) {
             cell.alpha = 1.0
+            selectedPhotos.remove(at: selectedPhotos.index(of: photo)!)
+        // Mark selected image
+        } else {
+            cell.alpha = 0.5
+            selectedPhotos.append(photo)
         }
     }
 }

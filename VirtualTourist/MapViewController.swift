@@ -40,7 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     func addLongPressRecognizer() {
         // [Long Press Recognizer](https://stackoverflow.com/questions/30858360/adding-a-pin-annotation-to-a-map-view-on-a-long-press-in-swift)
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(addPin))
-        longPressRecognizer.minimumPressDuration = 1.0
+        longPressRecognizer.minimumPressDuration = 0.7
         
         map.addGestureRecognizer(longPressRecognizer)
     }
@@ -48,20 +48,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // Add pin to map from gesture coords
     func addPin(gestureRecognizer:UIGestureRecognizer){
         
-        // Get coords
-        let touchPoint = gestureRecognizer.location(in: map)
-        let newCoordinates = map.convert(touchPoint, toCoordinateFrom: map)
-        let annotation = MKPointAnnotation()
-        
-        // Add to map
-        annotation.coordinate = newCoordinates
-        map.addAnnotation(annotation)
-        
-        // Add to db
-        let location = Location(context: CoreDataStack.shared.context)
-        location.lat = Double(newCoordinates.latitude)
-        location.long = Double(newCoordinates.longitude)
-        CoreDataStack.shared.save()
+        // So holding and dragging doesn't lay down a bazillion pins
+        if gestureRecognizer.state == UIGestureRecognizerState.began {
+            // Get coords
+            let touchPoint = gestureRecognizer.location(in: map)
+            let newCoordinates = map.convert(touchPoint, toCoordinateFrom: map)
+            let annotation = MKPointAnnotation()
+            
+            // Add to map
+            annotation.coordinate = newCoordinates
+            map.addAnnotation(annotation)
+            
+            // Add to db
+            let location = Location(context: CoreDataStack.shared.context)
+            location.lat = Double(newCoordinates.latitude)
+            location.long = Double(newCoordinates.longitude)
+            CoreDataStack.shared.save()
+        }
     }
     
     // Handle tap on existing pin

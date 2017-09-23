@@ -90,6 +90,9 @@
                                 <state key="normal" title="New Collection">
                                     <color key="titleColor" red="0.9882352941176471" green="1" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="actionButtonPressed:" destination="taQ-4e-HHX" eventType="touchUpInside" id="irF-5a-M2D"/>
+                                </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bHT-aP-WWM">
                                 <rect key="frame" x="0.0" y="213" width="375" height="404"/>
