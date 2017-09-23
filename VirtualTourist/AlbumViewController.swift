@@ -23,13 +23,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     let flickr = FlickrManager()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     var selectedPhotos = [Photo]()
-    {
-        // Change button title based on whether or not photos are selected
-        didSet
-        {
-            actionButton.titleLabel?.text = selectedPhotos.isEmpty ? "New Collection" : "Delete Selected Photos"
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +31,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         collectionView.dataSource = self
         
         configureInfoLabel()
+        updateActionButton()
         
         // Make sure we have a location
         if let location = location {
@@ -80,9 +74,16 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         }
     }
     
+    func updateActionButton() {
+        if selectedPhotos.isEmpty {
+            actionButton.setTitle("New Collection", for: UIControlState.normal)
+        } else {
+            actionButton.setTitle("Delete Photos", for: UIControlState.normal)
+        }
+    }
+    
     // MARK: Map
     func setUpMap(location: Location) {
-        
         let regionRadius: CLLocationDistance = 4000
         
             // Center map on location
@@ -250,5 +251,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
             cell.alpha = 0.5
             selectedPhotos.append(photo)
         }
+        
+        updateActionButton()
     }
 }

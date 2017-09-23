@@ -13,7 +13,6 @@ import CoreData
 class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var map: MKMapView!
-    
     private let pinIdentifier = "pinID"
     
     override func viewDidLoad() {
@@ -41,7 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     // Add pin to map from gesture coords
-    func addPin(gestureRecognizer:UIGestureRecognizer){
+    func addPin(gestureRecognizer:UIGestureRecognizer) {
         
         // So holding and dragging doesn't lay down a bazillion pins
         if gestureRecognizer.state == UIGestureRecognizerState.began {
@@ -65,13 +64,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // Handle tap on existing pin
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
     {
-        // get location
+        // Get location
         if let annotation = view.annotation {
             var location: Location!
             let lat = Double(annotation.coordinate.latitude)
             let long = Double(annotation.coordinate.longitude)
             
-            // get location
+            // Get location
             do {
                 let fr = NSFetchRequest<Location>(entityName: "Location")
                 let predicate = NSPredicate(format: "lat == %@ AND long == %@", argumentArray: [lat, long])
@@ -84,7 +83,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 print("Failed to get location: \(error.localizedDescription)")
             }
             
-            // push the album view
+            // Push the album view
             if let controller = self.storyboard!.instantiateViewController(withIdentifier: "albumVC") as? AlbumViewController {
                 controller.location = location
                 navigationController!.pushViewController(controller, animated: true)
