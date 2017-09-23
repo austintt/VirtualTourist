@@ -48,6 +48,9 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
             // Search or fetch photos
             if let dbResult = getPhotosFromDB() {
                 photos = dbResult
+                performUIUpdatesOnMain {
+                    self.collectionView.reloadData()
+                }
                 print("Photos from db: \(photos.count)")
             } else {
                 searchPhotos()
@@ -65,18 +68,17 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     }
     
     func configureInfoLabel() {
-        infoLabel.layer.borderColor = UIColor(red: 33/255, green: 160/255, blue: 160/255, alpha: 1).cgColor
-        infoLabel.layer.borderWidth = 2.0
+        infoLabel.layer.borderWidth = 0.0
         infoLabel.layer.cornerRadius = 6
         infoLabel.layer.masksToBounds = true
         infoLabel.text = ""
         infoLabel.isHidden = true
     }
     
-    func displayMessage(error: Error) {
+    func displayMessage(text: String) {
         performUIUpdatesOnMain {
             self.infoLabel.isHidden = false
-            self.infoLabel.text = error.localizedDescription
+            self.infoLabel.text = text
         }
     }
     
@@ -100,7 +102,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         if let location = self.location {
             flickr.searchByLocation(location: location) { (result, error) in
                 if let error = error {
-                    self.displayMessage(error: error)
+                    self.displayMessage(text: error.localizedDescription)
                 } else {
                     
                     // Save photos to DB
@@ -135,10 +137,14 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
         
         do {
             if let result = try CoreDataStack.shared.context.fetch(fr) as? [Photo] {
-                return result.count > 0 ? result : nil
+                if result.count > 0 {
+                    return result
+                } else {
+                    displayMessage(text: "No photos at location")
+                }
             }
         } catch {
-            print("Error getting photos from DB")
+            displayMessage(text: "Error getting photos from DB")
         }
         
         return nil
@@ -219,6 +225,8 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     }
     
     @IBAction func actionButtonPressed(_ sender: Any) {
+        infoLabel.isHidden = true
+        
         // Check if we have any selected photos
         if selectedPhotos.isEmpty {
             // Clear all photos and request new
