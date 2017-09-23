@@ -22,14 +22,12 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     var photos = [Photo]()
     let flickr = FlickrManager()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
-    
-    // Set button title
     var selectedPhotos = [Photo]()
     {
         // Change button title based on whether or not photos are selected
         didSet
         {
-            actionButton.titleLabel?.text = selectedPhotos.isEmpty ? "New Collection" : "Delete Photos"
+            actionButton.titleLabel?.text = selectedPhotos.isEmpty ? "New Collection" : "Delete Selected Photos"
         }
     }
     
@@ -107,22 +105,28 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
                     
                     // Save photos to DB
                     if let urls = result {
-                        
-                        // for each photo we found, make a new Photo object
-                        for url in urls {
-                            let photo = Photo(context: CoreDataStack.shared.context)
-                            photo.url = url
-                            photo.location = self.location
+                        if urls.count > 0 {
+                            // for each photo we found, make a new Photo object
+                            for url in urls {
+                                let photo = Photo(context: CoreDataStack.shared.context)
+                                photo.url = url
+                                photo.location = self.location
+                                
+                                self.photos.append(photo)
+                            }
                             
-                            self.photos.append(photo)
+                            // Update collectionView
+                            performUIUpdatesOnMain {
+                                self.collectionView.reloadData()
+                            }
+                            
+                            CoreDataStack.shared.save()
+                            print("Found photos: \(urls.count)")
+                            print("photos: \(self.photos.count)")
+
+                        } else {
+                            self.displayMessage(text: "No photos at location")
                         }
-                        performUIUpdatesOnMain {
-                            self.collectionView.reloadData()
-                        }
-                        
-                        CoreDataStack.shared.save()
-                        print("Found photos: \(urls.count)")
-                        print("photos: \(self.photos.count)")
                     }
                 }
             }
@@ -139,8 +143,6 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
             if let result = try CoreDataStack.shared.context.fetch(fr) as? [Photo] {
                 if result.count > 0 {
                     return result
-                } else {
-                    displayMessage(text: "No photos at location")
                 }
             }
         } catch {
@@ -185,41 +187,36 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //Get the Collection Cell
+       
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
-        
-        //Get the Photo Image saved in the DB.
-        let photo = self.photos[indexPath.row] as! Photo
+        let photo = self.photos[indexPath.row]
         
         // If no image in db, download.
         if photo.image == nil {
             cell.activityIndicator.startAnimating()
             
-            // Download photos from Flickr API.
             flickr.downloadPhotos(photoURL: photo.url!){ (image, error)  in
-                
-                //Check if the image data is not nil
                 guard let imageData = image,
-                    let downloadedImage = UIImage(data: imageData as Data) else {
+                    let newImage = UIImage(data: imageData as Data) else {
                     return
                 }
+                
+                // Display downloaded photo
+                performUIUpdatesOnMain {
+                    if let photoCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell {
+                        photoCell.imageView.image = newImage
+                        photoCell.activityIndicator.stopAnimating()
+                    }
+                }
+                cell.imageView.image = UIImage(data: imageData as Data)
                 
                 // Save data
                 photo.image = imageData
                 CoreDataStack.shared.save()
-                
-                // Display images
-                performUIUpdatesOnMain {
-                    if let updateCell = self.collectionView.cellForItem(at: indexPath) as? PhotoCell {
-                        updateCell.imageView.image = downloadedImage
-                        updateCell.activityIndicator.stopAnimating()
-                    }
-                }
-                cell.imageView.image = UIImage(data: imageData as Data)
             }
         } else {
-            // Display the image loaded from Core data.
-            cell.imageView.image = UIImage(data: photo.image as! Data)
+            // Display db photo
+            cell.imageView.image = UIImage(data: photo.image! as Data)
         }
         return cell
     }

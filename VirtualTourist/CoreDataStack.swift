@@ -87,7 +87,7 @@ struct CoreDataStack {
 internal extension CoreDataStack  {
     
     func dropAllData() throws {
-        // delete all the objects in the db. This won't delete the files, it will
+        // Delete all the objects in the db. This won't delete the files, it will
         // just leave empty tables.
         try coordinator.destroyPersistentStore(at: dbURL, ofType:NSSQLiteStoreType , options: nil)
         try addStoreCoordinator(NSSQLiteStoreType, configuration: nil, storeURL: dbURL, options: nil)
@@ -103,7 +103,7 @@ extension CoreDataStack {
             do {
                 try context.save()
             } catch {
-                print("Error while saving")
+                print("Error saving")
             }
         }
     }
@@ -115,7 +115,7 @@ extension CoreDataStack {
                 do {
                     try self.context.save()
                 } catch {
-                    fatalError("Error while saving main context: \(error)")
+                    fatalError("Error saving context: \(error)")
                 }
                 
                 // Save in background
@@ -123,7 +123,7 @@ extension CoreDataStack {
                     do {
                         try self.persistingContext.save()
                     } catch {
-                        fatalError("Error while saving persisting context: \(error)")
+                        fatalError("Error saving persisting context: \(error)")
                     }
                 }
             }
