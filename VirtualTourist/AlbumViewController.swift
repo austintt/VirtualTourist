@@ -159,7 +159,7 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
             CoreDataStack.shared.context.delete(photo)
         }
         // Reset arrays, save
-        photos.removeAll()
+        photos = []
         selectedPhotos = [Photo]()
         collectionView.reloadData()
         CoreDataStack.shared.save()
@@ -191,6 +191,10 @@ class AlbumViewController: UIViewController, NSFetchedResultsControllerDelegate,
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
         let photo = self.photos[indexPath.row]
+        
+        // Set nil because resusable cells will contain old images
+        // even after images are deleted
+        cell.imageView.image = nil
         
         // If no image in db, download.
         if photo.image == nil {

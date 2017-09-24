@@ -83,6 +83,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 print("Failed to get location: \(error.localizedDescription)")
             }
             
+            // Deselect pin
+            mapView.deselectAnnotation(annotation, animated: false)
+            
             // Push the album view
             if let controller = self.storyboard!.instantiateViewController(withIdentifier: "albumVC") as? AlbumViewController {
                 controller.location = location
